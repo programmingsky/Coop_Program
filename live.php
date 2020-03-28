@@ -1,19 +1,39 @@
 #include "stdio.h"
 #include "string.h"
-
-int chess[100][100];
+#include "windows.h"
+ 
+#define N 100      //表示细胞
+int chess[N][N];
  
 int Count(int i,int j);		//计算生命周围的生命数量
+int chess0[N+2][N+2];		//辅助棋盘
 
-void RunGame();//进行游戏
+void RunGame();		//进行游戏
+int Count(int i,int j);		//计算生命周围的生命数量
+void Data();		//调用已存的游戏数据
+void Initialize();		//初始化一个对局函数
 
 main()
 {
     system("mode con cols=99 lines=50");		//设置窗口大小
     system("color 70");		//设置颜色
+	Initialize();		//初始化一个对局函数
 	RunGame();		//进行游戏
 }
  
+void Initialize()	//初始化一个对局函数
+{
+    Data();		//调用已存的游戏数据
+}
+
+void Data()		//调用已存的游戏数据
+{
+    int p=12;
+    int l;
+    for(l=-16;l<=16;l++)
+        chess[N/2+1][N/2+1+l]=1;
+}
+
 void RunGame()		//进行游戏
 {
     int i,j,s=0;
@@ -37,21 +57,21 @@ void RunGame()		//进行游戏
                 if(chess[i][j]==1)
                 {
                     if(s<2)
-                        chess[i][j]=0;		//如果一个生命周围的生命少于2个，它在回合结束后死亡。
+                        chess0[i][j]=0;		//如果一个生命周围的生命少于2个，它在回合结束后死亡。
                     else if(s>3)
-                        chess[i][j]=0;		//如果一个生命周围的生命超过3个，它在回合结束后死亡。
+                        chess0[i][j]=0;		//如果一个生命周围的生命超过3个，它在回合结束后死亡。
                     else if(s==2||s==3)
-                        chess[i][j]=1;		//如果一个生命周围有2或3个生命，它在回合结束时保持原样。
+                        chess0[i][j]=1;		//如果一个生命周围有2或3个生命，它在回合结束时保持原样。
                 }
                 else if(chess[i][j]==0)
                 {
                     if(s==3)
-                        chess[i][j]=1;		//如果一个死格周围有3个生命，它在回合结束时获得生命。
+                        chess0[i][j]=1;		//如果一个死格周围有3个生命，它在回合结束时获得生命。
                 }
             }
          for(i=1;i<N+1;i++)
             for(j=1;j<N+1;j++)
-                chess[i][j]=chess[i][j];
+                chess[i][j]=chess0[i][j];
         Sleep(5);
         if(flag==0)
         {
